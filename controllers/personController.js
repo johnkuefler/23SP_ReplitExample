@@ -1,4 +1,45 @@
 const Person = require('../models/person');
+const excel = require('exceljs');
+
+exports.exportExcel = async function(req, res) {
+  const workbook = new excel.Workbook();
+  const worksheet = workbook.addWorksheet('Persons');
+
+  let persons = await Person.find({});
+  worksheet.columns = [
+    { header: 'First Name', key: 'firstName', width: 10 },
+    { header: 'Last Name', key: 'lastName', width: 10 },
+    { header: 'Date of Birth', key: 'dateOfBirth', width: 10 },
+  ]
+  worksheet.addRows(persons);
+
+  res.setHeader(
+    'Content-Type',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  );
+  res.setHeader(
+    'Content-Disposition',
+    'attachment; filename=' + 'persons.xlsx',
+  );
+  return workbook.xlsx.write(res).then(function() {
+    res.status(200).end();
+  });
+}
+
+exports.exportCsv = async function(req, res) {
+  let persons = await Person.find({});
+
+  let csv = 'First Name, Last Name, Date of Birth\r\n';
+  persons.forEach((person) => {
+    csv += person.firstName + ',';
+    csv += person.lastName + ',';
+    csv += person.dateOfBirth + '\r\n';
+  })
+
+  res.header('Content-Type', 'text/csv');
+  res.attachment('output.csv');
+  return res.send(csv);
+}
 
 exports.create = async function(req, res) {
   let person = new Person({

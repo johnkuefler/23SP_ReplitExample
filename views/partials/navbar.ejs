@@ -12,6 +12,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/">Home Page</a>
                 </li>
+              <% if (locals.user.role == "Admin") { %>
+               <li class="nav-item">
+                    <a class="nav-link" href="/admin">Admin Page</a>
+                </li>
+              <% } %>
                <% if (locals.user) { %>
                     <li class="nav-item">
                       <a class="nav-link" href="/account/logout">Hi <%=locals.user.firstName %>, Logout</a>

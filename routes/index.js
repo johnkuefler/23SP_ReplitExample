@@ -11,6 +11,10 @@ router.get('/create', authMiddleware.ensureAuthenticated, function(req, res, nex
   res.render('create');
 });
 
+router.post('/create', authMiddleware.ensureAuthenticated, function(req, res, next) {
+  personController.create(req, res);
+});
+
 router.get('/update', authMiddleware.ensureAuthenticated, function(req, res, next) {
   personController.update_get(req, res);
 });
@@ -21,6 +25,14 @@ router.post('/update', authMiddleware.ensureAuthenticated, function(req, res, ne
 
 router.get('/delete', authMiddleware.ensureAuthenticated, function(req, res, next) {
   personController.delete(req, res);
+});
+
+router.get('/export-csv', authMiddleware.ensureAuthenticated, function(req, res, next) {
+  personController.exportCsv(req, res);
+});
+
+router.get('/export-excel', authMiddleware.ensureAuthenticated, function(req, res, next) {
+  personController.exportExcel(req, res);
 });
 
 module.exports = router;
